@@ -6,13 +6,13 @@
 #    By: jbernabe <jbernabe@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/02/04 22:30:52 by jbernabe          #+#    #+#              #
-#    Updated: 2014/04/17 08:54:26 by jbernabe         ###   ########.fr        #
+#    Updated: 2014/04/18 04:03:14 by jbernabe         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
 
-NAME = lem-in
+NAME = my_malloc
 
 CFLAGS = -g --debug -Wall -Wextra -Werror
 
