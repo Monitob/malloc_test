@@ -6,121 +6,71 @@
 /*   By: jbernabe <jbernabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/04/17 08:47:32 by jbernabe          #+#    #+#             */
-/*   Updated: 2014/04/19 05:16:55 by jbernabe         ###   ########.fr       */
+/*   Updated: 2014/04/20 05:49:45 by jbernabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <sys/mman.h>
 #include <stdio.h>
-#
 #include "my_malloc.h"
 
-t_block			*extend_heap(t_block *last_ptr, size_t req_size)
+
+t_block			*init_heap(void)
 {
-	ft_putendl("entro en extend_heap");
 	t_block 	*z_page;
 
-	z_page = NULL;
-	
-	if (last_ptr)
-	{
-		if (req_size > 512)
-		{
-			z_page->large.size = req_size;
-			z_page->next = NULL;
-			z_page->is_available = 0;
-		}
-		if (req_size > 200  &&  req_size < 512)
-		{
-			z_page->small.size = req_size;
-			z_page->next = NULL;
-			z_page->is_available = 0;
-		}
-		if (req_size < 200)
-		{
-			z_page->tiny.size = req_size;
-			z_page->next = NULL;
-			z_page->is_available = 0;
-		}
-	}
-	else
-	{
-		if (req_size > 512)
-		{
-			ft_putendl("entro en extend_heap LARGE");
-			z_page->large.addr = mmap(0, getpagesize() * 3, PROT_READ
-				| PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
-			z_page->large.size = req_size;
-			z_page->next = NULL;
-		}
-		if (req_size > 200  &&  req_size < 512)
-		{
-			ft_putendl("entro en extend_heap SMALL");
-			z_page->small.addr = mmap(0, getpagesize() * 2, PROT_READ
-				| PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
-			z_page->small.size = req_size;
-			z_page->next = NULL;
-		}
-		if (req_size < 200)
-		{
-			ft_putendl("entro en extend_heap TINY");
-			z_page->tiny.addr = mmap(0, getpagesize(), PROT_READ
-				 | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
-			 z_page->tiny.size = req_size;
-			z_page->next = NULL;
-			ft_putendl("SALGO en extend_heap TINY");
-		}
-	
-			if (z_page->tiny.addr == MAP_FAILED
-				|| z_page->small.addr == MAP_FAILED
-				|| z_page->large.addr == MAP_FAILED)
-			{
-
-				ft_putendl("exit");
-				return (NULL);
-			}
-				ft_putendl("here is the seg");
-	}
-	ft_putendl("salgo en extend_heap");
+	z_page = (t_block *)mmap(0, sizeof(t_block), PROT_WRITE
+		| PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+	ft_putendl("init_heap 0");
+	// z_page->tiny->addr = mmap(0, TINY, PROT_READ
+	// 	| PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+	// ft_putendl("init_heap 1");
+	// z_page->small->addr = mmap(0, SMALL, PROT_READ
+	// 	| PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+	// ft_putendl("init heap 2");
+	// if (z_page->tiny->addr == MAP_FAILED
+	// 	|| z_page->small->addr == MAP_FAILED)
+	// {
+	// 	ft_putendl("exit");
+	// 	return (NULL);
+	// }
 	return (z_page);
 }
 
-
 void			*my_malloc(size_t size_str)
-{	
-	ft_putendl("entro en malloc");	
+{
 	t_block		*b;
-	t_block		last_ptr;
-	size_t		n_units;
+	t_block		*tab;
+	static	int	is_first = 0;
 
-	n_units = ((size_str + sizeof(t_block) - 1) / sizeof(t_block)) + 1;
-	if (!(base))
+	if (size_str == 0)
+		return (NULL);
+	if (is_first == 0)
 	{
-		b = extend_heap(NULL, n_units);
-		if (!b)
-			return (NULL);
-		base = b;
+		is_first = 1;
+		ft_putendl("entro en el if de b");
+		b = init_heap();
+		tab = tab_index();
+		ft_putendl("entro en assg_addr");
+		// assign_addr(&tab, b);
+		 if (!(b))
+		 	return (NULL);
+		base_malloc = *b;
 	}
-	else
-	{
-		(void)last_ptr;
-
-	}
+	ft_putendl("salgo de malloc");
 	return (b->data);
-	ft_putendl("salgo en malloc");
 }
 
 int main(int ac, char **av)
 {
 	if (ac == 2)
 	{
-		base = NULL;
-		printf("%d\n", ft_atoi(av[1]));
-		char *a = my_malloc(ft_atoi(av[1]));
-		// a[0] = 'a';
-		// printf("malloc address: %p\n", a);
-		// printf("%s \n", a);
-		// printf("chunk_bloc size %lu\n", sizeof(t_block));
+		char *a = (char *)my_malloc(ft_atoi(av[1]));
+		printf("get_pagesize %i\n", getpagesize());
+		a = "hola";
+		printf("malloc address: %p\n", a);
+		printf("%s \n", a);
+		printf("chunk_bloc size %lu\n", sizeof(t_block));
 	}
 	else
 	{

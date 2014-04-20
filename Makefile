@@ -6,7 +6,7 @@
 #    By: jbernabe <jbernabe@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/02/04 22:30:52 by jbernabe          #+#    #+#              #
-#    Updated: 2014/04/19 03:40:34 by jbernabe         ###   ########.fr        #
+#    Updated: 2014/04/20 02:06:09 by jbernabe         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ PATH_SRC = ./src
 PATH_OBJ = ./objs
 PATH_INC = ./includes
 
-SRC = my_malloc.c
+SRC = my_malloc.c tab_index.c
 
 OBJ = $(patsubst %.c, $(PATH_OBJ)/%.o, $(SRC))
 
